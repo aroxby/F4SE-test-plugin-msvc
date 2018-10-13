@@ -19,6 +19,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "f4se_loader_common", "f4se\
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginBravo", "PluginBravo\PluginBravo.vcxproj", "{797F1137-1E39-416F-AF4E-5FD50107C716}"
+	ProjectSection(ProjectDependencies) = postProject
+		{20C6411C-596F-4B85-BE4E-8BC91F59D8A6} = {20C6411C-596F-4B85-BE4E-8BC91F59D8A6}
+		{A236F69D-8FF9-4491-AC5F-45BF49448BBE} = {A236F69D-8FF9-4491-AC5F-45BF49448BBE}
+		{D4C128A1-73DC-4941-A453-CE55AF239BA8} = {D4C128A1-73DC-4941-A453-CE55AF239BA8}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
