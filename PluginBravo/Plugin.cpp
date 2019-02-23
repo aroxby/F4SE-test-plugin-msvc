@@ -1,46 +1,57 @@
 #define DLLFUNC extern "C" __declspec(dllexport)
 
 #include "f4se/PluginAPI.h"
-#include "f4se/PapyrusNativeFunctions.h"
+using namespace std;
 
-FILE *LOG = NULL;
+BOOL ConsolePrint(HANDLE hOut, const char *format, ...) {
+	va_list args;
+	va_start(args, format);
 
-void dragon(StaticFunctionTag *tag)
-{
-	fprintf(LOG, "Called (%p)!\n", tag);
-	Console_Print("Called!!");
+	size_t len = _vscprintf(format, args);
+	char *buffer = new char[len + 1];
+
+	DWORD bytes_written;
+	vsprintf_s(buffer, len + 1, format, args);
+	BOOL bRet = WriteFile(hOut, buffer, len, &bytes_written, NULL);
+
+	delete[] buffer;
+	va_end(args);
+
+	return bRet;
 }
 
-bool registerFuncs(VirtualMachine* vm)
-{
-	vm->RegisterFunction(
-		new NativeFunction0<StaticFunctionTag, void>("Terabyte", "Game", dragon, vm));
+void ServiceThread() {
+	const static DWORD buffer_length = 128;
+	char buffer[buffer_length];
+	HANDLE hStdIn = GetStdHandle(STD_INPUT_HANDLE);
+	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	DWORD bytes_read;
 
-	return true;
+	ConsolePrint(hStdOut, "Ready!\n");
+	BOOL bRet = ReadFile(hStdIn, buffer, buffer_length - 1, &bytes_read, NULL);
+	if (bRet) {
+		buffer[bytes_read] = 0;
+		ConsolePrint(hStdOut, "I think you said [%s]\n", buffer);
+	} else {
+		ConsolePrint(hStdOut, "I didn't get that\n");
+	}
 }
 
-DLLFUNC bool F4SEPlugin_Query(const F4SEInterface * f4se, PluginInfo * info)
-{
+DWORD WINAPI ServiceThreadWrapper(LPVOID) {
+	ServiceThread();
+	return 0;
+}
+
+DLLFUNC bool F4SEPlugin_Query(const F4SEInterface * f4se, PluginInfo * info) {
 	info->infoVersion = PluginInfo::kInfoVersion;
 	info->name = "Terabyte Test Plugin Bravo";
 	info->version = 1;
 	return true;
 }
 
-DLLFUNC bool F4SEPlugin_Load(const F4SEInterface * f4se)
-{
-	fopen_s(&LOG, "C:\\Users\\Andy\\Source Code\\Visual Studio Projects\\Visual Studio 2017\\F4SE-test-plugin-msvc\\pap.log", "w");
-	setvbuf(LOG, NULL, _IONBF, 0);
-
-	F4SEPapyrusInterface * g_papyrus;
-	g_papyrus = (F4SEPapyrusInterface *)f4se->QueryInterface(kInterface_Papyrus);
-	if (g_papyrus) {
-		g_papyrus->Register(registerFuncs);
-		fprintf(LOG, "Installed!\n");
-	}
-	else {
-		fprintf(LOG, "FAIL!\n");
-	}
-
-	return true;
+DLLFUNC bool F4SEPlugin_Load(const F4SEInterface * f4se) {
+	DWORD thread_id;
+	AllocConsole();
+	HANDLE hThread= CreateThread(NULL, 0, ServiceThreadWrapper, NULL, 0, &thread_id);
+	return hThread != 0;
 }
