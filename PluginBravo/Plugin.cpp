@@ -92,34 +92,29 @@ void DumpNpc(HANDLE hOut, TESNPC *ent) {
 }
 
 void DumpForm(HANDLE hOut, TESForm *ent) {
-	try {
-		ConsolePrint(hOut, "Form (%p):\n", ent);
-		if (ent) {
-			UInt8 formType = ent->formType;
-			UInt32 formID = ent->formID;
-			UInt32 flags = ent->flags;
-			const char *name = ent->GetFullName();
-			const char *edid = ent->GetEditorID();
+	ConsolePrint(hOut, "Form (%p):\n", ent);
+	if (ent) {
+		UInt8 formType = ent->formType;
+		UInt32 formID = ent->formID;
+		UInt32 flags = ent->flags;
+		const char *name = ent->GetFullName();
+		const char *edid = ent->GetEditorID();
 
-			ConsolePrint(hOut, "Type: %u, ID: %x, Flags: %x\n", UInt32(formType), formID, flags);
-			ConsolePrint(hOut, "Name: %p[%u] %s\n", name, nullableStringLength(name), name);
-			ConsolePrint(hOut, "EDID: %p[%u] %s\n", edid, nullableStringLength(edid), edid);
+		ConsolePrint(hOut, "Type: %u, ID: %x, Flags: %x\n", UInt32(formType), formID, flags);
+		ConsolePrint(hOut, "Name: %p[%u] %s\n", name, nullableStringLength(name), name);
+		ConsolePrint(hOut, "EDID: %p[%u] %s\n", edid, nullableStringLength(edid), edid);
 
-			TESNPC *npc = DYNAMIC_CAST(ent, TESForm, TESNPC);
-			if (npc) {
-				DumpNpc(hOut, npc);
-			}
-			TESPackage *package = DYNAMIC_CAST(ent, TESForm, TESPackage);
-			if (package) {
-				DumpPackage(hOut, package);
-			}
+		TESNPC *npc = DYNAMIC_CAST(ent, TESForm, TESNPC);
+		if (npc) {
+			DumpNpc(hOut, npc);
 		}
-		else {
-			ConsolePrint(hOut, "Null Entity\n");
+		TESPackage *package = DYNAMIC_CAST(ent, TESForm, TESPackage);
+		if (package) {
+			DumpPackage(hOut, package);
 		}
 	}
-	catch (...) {
-		ConsolePrint(hOut, "Caught a thing.  You're welcome!\n");
+	else {
+		ConsolePrint(hOut, "Null Entity\n");
 	}
 }
 
