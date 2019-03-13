@@ -46,7 +46,20 @@ public:
 	} packages;
 };
 
+const static int HackPack = 0x22bf7d;
+
 void DumpForm(HANDLE hOut, TESForm *ent);
+
+void ReplaceAI(HANDLE hOut, AIF *ent) {
+	TESForm *newPack = LookupFormByID(HackPack);
+	if (!newPack) {
+		ConsolePrint(hOut, "AI Lookup Error!\n");
+	} else {
+		ent->packages.package = (TESPackage*)newPack;
+		ent->packages.next = nullptr;
+		ConsolePrint(hOut, "Did Replace\n");
+	}
+}
 
 void DumpPackage(HANDLE hOut, TESPackage *ent) {
 	ConsolePrint(hOut, "Pack (%p):\n", ent);
@@ -73,6 +86,12 @@ void DumpAi(HANDLE hOut, TESAIForm *ent) {
 			DumpForm(hOut, packageData->package);
 			packageData = packageData->next;
 		} while (packageData);
+
+		if (ai->packages.package->formID != HackPack) {
+			ReplaceAI(hOut, ai);
+		} else {
+			ConsolePrint(hOut, "Replacement is not needed\n");
+		}
 	}
 	else {
 		ConsolePrint(hOut, "Null Entity\n");
