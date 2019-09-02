@@ -193,7 +193,8 @@ void ServiceThread() {
 		}
 		else {
 			buffer[bytes_read] = 0;
-			TESForm *searchRet = LookupFormByID(0x1a4d7);
+			// TESForm *searchRet = LookupFormByID(0x1a4d7);
+			TESForm *searchRet = LookupFormByID(0xdc939);
 			if (!searchRet) {
 				ConsolePrint(hStdOut, "Lookup Failed!\n");
 			}
