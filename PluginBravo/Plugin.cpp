@@ -155,7 +155,29 @@ void DumpRef(HANDLE hOut, TESObjectREFR *ent) {
 		ConsolePrint(hOut, "Null Entity\n");
 	}
 }
-
+/*
+AI (0000026762E44148):
+Flags?: 0000000000046651	<-- Constant
+Unk: 0000000000000000		<-- Constant
+This package: 0000026687E471F8
+Next package: 0000026684CD7E00
+Form (0000026687E471F8):
+Type: 82, ID: 115bd3, Flags: 9
+Name: 00007FF7B9825BC3[0]
+EDID: 00007FF7B9825BC3[0]
+Pack (0000026687E471F8):
+Flags?: 0002001200000000
+Type?: 000000000000FEFF
+This package: 0000026687F319C8
+Next package: 0000000000000000
+Form (0000026687F319C8):
+Type: 82, ID: 22aa4, Flags: 9
+Name: 00007FF7B9825BC3[0]
+EDID: 00007FF7B9825BC3[0]
+Pack (0000026687F319C8):
+Flags?: 0002001208900000
+Type?: 000000000000FC31
+*/
 void ServiceThread() {
 	const static DWORD buffer_length = 128;
 	char buffer[buffer_length];
