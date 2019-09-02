@@ -41,9 +41,12 @@ public:
 	class PackageData
 	{
 	public:
-		TESPackage *package;
-		PackageData *next;
+		TESPackage *package;	// 18
+		PackageData *next;		// 20
 	} packages;
+	// These fields are not confirmed
+	UInt64 unk28;
+	TESForm *unk30;
 };
 
 const static int HackPack = 0x22bf7d;
@@ -78,6 +81,8 @@ void DumpAi(HANDLE hOut, TESAIForm *ent) {
 		AIF *ai = (AIF*)ent;
 		ConsolePrint(hOut, "Flags?: %p\n", ai->unk08);
 		ConsolePrint(hOut, "Unk: %p\n", ai->unk10);
+		ConsolePrint(hOut, "Unk: %p\n", ai->unk28);
+		ConsolePrint(hOut, "Unk: %p\n", ai->unk30);
 
 		AIF::PackageData *packageData = &ai->packages;
 		do {
@@ -92,6 +97,7 @@ void DumpAi(HANDLE hOut, TESAIForm *ent) {
 		} else {
 			ConsolePrint(hOut, "Replacement is not needed\n");
 		}
+		DumpForm(hOut, ai->unk30);
 	}
 	else {
 		ConsolePrint(hOut, "Null Entity\n");
